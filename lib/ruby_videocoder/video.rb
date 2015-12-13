@@ -20,5 +20,9 @@ module VideoCoder
     def duration
       metadata[:duration]
     end
+
+    def video_bitrate
+      metadata[:video_bitrate]
+    end
   end
 end

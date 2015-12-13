@@ -5,6 +5,8 @@ module VideoCoder
     DURATION_REGEX = %r{Duration:\s+(\d+):(\d+):([\d.]+).*?
       bitrate:\s*(\d+)\s*kb\/s}x
 
+    VIDEO_BITRATE_REGEX = %r{Stream\s#\d:\d.*?Video:.*,\s(.*)\skb\/s,}
+
     def initialize(filepath)
       @filepath = filepath
     end
@@ -23,6 +25,7 @@ module VideoCoder
       parsed_output = {}
       ffmpeg_output = Ffmpeg.new(filepath).output
       parsed_output[:duration] = duration(ffmpeg_output)
+      parsed_output[:video_bitrate] = video_bitrate(ffmpeg_output)
 
       parsed_output
     end
@@ -33,6 +36,12 @@ module VideoCoder
       ((matched[1].to_i * 3600 +
         matched[2].to_i * 60 +
         matched[3].to_f) * 1000).to_i
+    end
+
+    def video_bitrate(ffmpeg_output)
+      return unless (matched = ffmpeg_output.match(VIDEO_BITRATE_REGEX))
+
+      matched[1].to_i
     end
   end
 end

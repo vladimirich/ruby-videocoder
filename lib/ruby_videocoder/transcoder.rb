@@ -4,8 +4,12 @@ module VideoCoder
     attr_reader :options
 
     def initialize(filepath, options)
-      validator = EncodeOption.new(options)
-      fail EncodeError, validator.errors.join(';') unless validator.valid?
+      options = Options.new(options)
+
+      fail(
+        EncodeError,
+        options.errors.join(';')
+      ) unless options.valid?
 
       @filepath = filepath
       @options  = options

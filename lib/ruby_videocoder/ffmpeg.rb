@@ -18,8 +18,10 @@ module VideoCoder
         FFMPEG_BIN,
         '-i',
         filepath,
-        prepare_options_for_transcoding(options)
+        options.to_s
       )
+
+      options.output
     end
 
     private
@@ -34,11 +36,6 @@ module VideoCoder
       `#{args.join(' ')} 2>&1`.encode(
         'UTF-8', 'binary', invalid: :replace, undef: :replace, replace: ''
       )
-    end
-
-    def prepare_options_for_transcoding(options)
-      '-c:v libx264 -c:a libfaac -b:v'\
-      " #{options[:video_bitrate]} #{options[:output_file]}"
     end
   end
 end
